@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhaval Sanchala — Publication &amp; Medical Communications Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0FA;
+    --paper-raised:#FBF9FE;
+    --card:#FFFFFF;
+    --ink:#23004C;
+    --ink-soft:#5A4A73;
+    --line:#D9CFE6;
+    --teal:#7A00E6;
+    --teal-deep:#23004C;
+    --teal-soft:#EAD9FB;
+    --amber:#DA3A16;
+    --amber-soft:#FBD8CE;
+    --tag-bg:#ECE4F5;
+    --shadow: 0 1px 2px rgba(35,0,76,.06), 0 8px 24px -12px rgba(35,0,76,.22);
+    --seg1:#7A00E6;
+    --seg2:#DA3A16;
+    --seg3:#007FAD;
+    --seg4:#268500;
+    --magenta:#D515B9;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--amber-soft);color:var(--teal-deep);}
+  .serif{font-family:'Source Serif 4',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  svg.icon{width:1.15em;height:1.15em;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;}
+
+  /* ===== sticky nav ===== */
+  .topnav{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:1rem;
+    padding:.9rem 6vw;
+    background:rgba(244,240,250,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topnav .brand{
+    font-family:'Source Serif 4',serif;font-weight:600;font-size:1rem;
+    display:flex;align-items:center;gap:.5rem;
+  }
+  .topnav .brand .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--amber);}
+  .topnav nav{display:flex;gap:.3rem;flex-wrap:wrap;}
+  .topnav nav a{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:.4rem .75rem;border-radius:20px;color:var(--ink-soft);
+    transition:background .2s ease, color .2s ease;
+  }
+  .topnav nav a:hover{background:var(--tag-bg);color:var(--ink);}
+  .topnav nav a.active{background:var(--teal);color:#fff;}
+
+  /* ===== hero ===== */
+  .hero{
+    padding:3rem 6vw 2.4rem;
+    background:var(--paper-raised);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-kicker{
+    font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--teal);margin:0 0 .6rem;
+  }
+  .hero h1{
+    font-family:'Source Serif 4',serif;font-weight:600;letter-spacing:-.01em;
+    font-size:clamp(2rem,4.4vw,3.3rem);line-height:1.04;margin:0 0 .8rem;
+    max-width:16ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--teal);}
+  .hero p{max-width:56ch;color:var(--ink-soft);font-size:1rem;line-height:1.6;margin:0;}
+  .hero-stats{display:flex;gap:2.4rem;flex-wrap:wrap;margin-top:2rem;}
+  .hstat .n{font-family:'Source Serif 4',serif;font-weight:700;font-size:2rem;color:var(--teal);line-height:1;display:block;}
+  .hstat .l{font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);}
+  .hstat{border-left:2px solid var(--amber);padding-left:.7rem;}
+
+  /* ===== section shell ===== */
+  section{padding:3.4rem 6vw;border-bottom:1px solid var(--line);scroll-margin-top:4.4rem;}
+  .section-head{display:flex;align-items:baseline;gap:.9rem;flex-wrap:wrap;}
+  .fig-tag{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--teal);border:1px solid var(--teal);padding:.15rem .5rem;border-radius:2px;}
+  .section-title{font-family:'Source Serif 4',serif;font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;margin:0;}
+  .section-desc{max-width:64ch;color:var(--ink-soft);font-size:.94rem;line-height:1.6;margin:.6rem 0 2rem;}
+
+  /* ===== filter pills ===== */
+  .filterbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.6rem;}
+  .filterbtn{
+    font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.03em;
+    padding:.45rem .95rem;border-radius:20px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink-soft);cursor:pointer;
+    transition:all .18s ease;
+  }
+  .filterbtn:hover{border-color:var(--teal);color:var(--teal);}
+  .filterbtn.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+  /* ===== FIG 1: skill bar list ===== */
+  .barlist{display:flex;flex-direction:column;gap:.6rem;}
+  .barrow{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    box-shadow:var(--shadow);overflow:hidden;
+    transition:opacity .25s ease, max-height .25s ease;
+  }
+  .barrow.hide{display:none;}
+  .barrow-main{
+    display:grid;grid-template-columns:2.2rem minmax(180px,1fr) 6.5rem;
+    align-items:center;gap:1rem;
+    padding:.95rem 1.2rem;cursor:pointer;
+  }
+  .barrow-idx{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--amber);}
+  .barrow-info .name{font-family:'Source Serif 4',serif;font-weight:600;font-size:1rem;margin:0 0 .45rem;}
+  .barrow-track{position:relative;height:9px;border-radius:5px;background:var(--tag-bg);overflow:visible;}
+  .barrow-fill{
+    position:absolute;left:0;top:0;height:100%;border-radius:5px;
+    background:linear-gradient(90deg,var(--teal),var(--teal-deep));
+    width:0;transition:width 1s cubic-bezier(.22,.9,.3,1);
+  }
+  .barrow-num{
+    text-align:right;font-family:'Source Serif 4',serif;font-weight:700;font-size:1.35rem;color:var(--teal);
+    white-space:nowrap;
+  }
+  .barrow-num small{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:.6rem;color:var(--ink-soft);display:block;text-transform:uppercase;}
+  .barrow-chevron{
+    justify-self:end;color:var(--ink-soft);transition:transform .25s ease;
+  }
+  .barrow.open .barrow-chevron{transform:rotate(180deg);}
+  .barrow-detail{
+    max-height:0;overflow:hidden;transition:max-height .3s ease;
+    background:var(--paper-raised);border-top:1px solid var(--line);
+  }
+  .barrow.open .barrow-detail{max-height:420px;}
+  .barrow-detail-inner{padding:1.1rem 1.2rem 1.3rem 4rem;}
+  .detail-list{list-style:none;margin:0;padding:0;font-size:.86rem;color:var(--ink-soft);line-height:1.7;}
+  .detail-list li{position:relative;padding-left:1rem;}
+  .detail-list li::before{content:"—";position:absolute;left:0;color:var(--amber);}
+
+  /* execution mini stacked bar (inside its accordion) */
+  .exec-bar{display:flex;width:100%;height:16px;border-radius:4px;overflow:hidden;border:1px solid var(--line);background:var(--tag-bg);margin:.3rem 0 .8rem;}
+  .exec-seg{position:relative;display:block;height:100%;width:var(--w);background:var(--c);transition:width 1s cubic-bezier(.22,.9,.3,1);border-right:1px solid rgba(255,255,255,.4);cursor:pointer;}
+  .exec-seg:last-child{border-right:none;}
+  .exec-seg::after{
+    content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(4px);
+    background:var(--ink);color:var(--paper-raised);font-family:'IBM Plex Mono',monospace;font-size:.68rem;white-space:nowrap;
+    padding:.35rem .6rem;border-radius:3px;opacity:0;pointer-events:none;transition:opacity .18s ease, transform .18s ease;z-index:5;
+  }
+  .exec-seg:hover{filter:brightness(1.08);}
+  .exec-seg:hover::after{opacity:1;transform:translateX(-50%) translateY(0);}
+  .exec-legend{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.35rem 1.2rem;}
+  .exec-legend li{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--ink-soft);}
+  .exec-legend .dot{width:.55rem;height:.55rem;border-radius:2px;flex:none;}
+  .exec-legend b{margin-left:auto;font-family:'IBM Plex Mono',monospace;color:var(--ink);font-size:.85rem;}
+
+  /* ===== FIG 2: therapeutic areas ===== */
+  .ta-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.6rem;}
+  .ta-group{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:1.4rem 1.5rem 1.6rem;}
+  .ta-group h3{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 1.1rem;font-weight:500;}
+  .ta-bar-row{display:grid;grid-template-columns:8.5rem 1fr 2.4rem;align-items:center;gap:.7rem;margin-bottom:.7rem;}
+  .ta-bar-row:last-of-type{margin-bottom:0;}
+  .ta-label{font-family:'Source Serif 4',serif;font-size:.9rem;}
+  .ta-track{position:relative;height:9px;border-radius:5px;background:var(--tag-bg);}
+  .ta-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;width:0;transition:width 1s cubic-bezier(.22,.9,.3,1);cursor:pointer;}
+  .ta-fill.plan{background:linear-gradient(90deg,var(--teal),var(--teal-deep));}
+  .ta-fill.write{background:linear-gradient(90deg,var(--amber),#8E260E);}
+  .ta-val{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-soft);text-align:right;}
+  .ta-note{margin-top:1rem;font-size:.78rem;color:var(--ink-soft);font-style:italic;line-height:1.5;}
+
+  /* ---- TA cards ---- */
+  .ta-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem;}
+  .ta-card{
+    position:relative;overflow:hidden;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.1rem 1.1rem 1.15rem 1.3rem;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    cursor:default;
+  }
+  .ta-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  }
+  .ta-card.plan::before{background:linear-gradient(180deg,var(--teal),var(--teal-deep));}
+  .ta-card.write::before{background:linear-gradient(180deg,var(--amber),#8E260E);}
+  .ta-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:transparent;}
+  .ta-card-name{
+    font-family:'Source Serif 4',serif;font-weight:600;font-size:1.02rem;
+    margin:0 0 .6rem;line-height:1.2;
+  }
+  .ta-card-num{
+    font-family:'Source Serif 4',serif;font-weight:700;font-size:1.7rem;line-height:1;display:block;
+  }
+  .ta-card.plan .ta-card-num{color:var(--teal);}
+  .ta-card-badge{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+    letter-spacing:.05em;text-transform:uppercase;
+    padding:.28rem .55rem;border-radius:20px;
+    background:var(--amber-soft);color:#8E260E;
+  }
+  .ta-card-badge.plan{background:var(--teal-soft);color:var(--teal-deep);}
+  .ta-card-lbl{
+    display:block;font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin-top:.3rem;
+  }
+
+  /* ===== FIG 3: deliverables — visual only ===== */
+  .deliv-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;}
+  .deliv-col{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:1.5rem 1.5rem 1.7rem;transition:opacity .3s ease;}
+  .deliv-col.fade{opacity:.22;}
+  .deliv-head{display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem;}
+  .deliv-head .swatch{width:1.9rem;height:1.9rem;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;}
+  .deliv-head.writer .swatch{background:var(--teal);}
+  .deliv-head.lead .swatch{background:var(--amber);}
+  .deliv-head h3{font-family:'Source Serif 4',serif;font-size:1.1rem;margin:0;}
+  .deliv-head span{display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--ink-soft);}
+  .chip-cloud{display:flex;flex-wrap:wrap;gap:.55rem;}
+  .chip{
+    display:inline-flex;align-items:center;gap:.45rem;
+    font-family:'Inter',sans-serif;font-size:.82rem;
+    padding:.42rem .8rem .42rem .6rem;border-radius:20px;
+    border:1.4px solid var(--line);background:var(--paper-raised);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px -4px rgba(35,0,76,.3);}
+  .chip.writer{border-color:var(--teal-soft);}
+  .chip.writer svg{color:var(--teal);}
+  .chip.lead{border-color:var(--amber-soft);}
+  .chip.lead svg{color:var(--amber);}
+
+  /* ===== FIG 4: timeline ===== */
+  .timeline{position:relative;padding-left:2.4rem;margin-top:.4rem;max-width:640px;}
+  .timeline::before{content:"";position:absolute;left:.5rem;top:.4rem;bottom:.4rem;width:2px;
+    background:repeating-linear-gradient(var(--line),var(--line) 4px,transparent 4px,transparent 9px);}
+  .tl-item{position:relative;padding-bottom:1.8rem;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-dot{position:absolute;left:-2.4rem;top:.15rem;width:1rem;height:1rem;border-radius:50%;background:var(--paper);border:2px solid var(--teal);}
+  .tl-item.current .tl-dot{background:var(--magenta);border-color:var(--magenta);box-shadow:0 0 0 4px rgba(213,21,185,.18);}
+  .tl-card{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem 1rem;}
+  .tl-role{font-family:'Source Serif 4',serif;font-weight:600;font-size:1.05rem;margin:0;}
+  .tl-org{color:var(--teal);font-weight:500;}
+  .tl-dates{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-soft);white-space:nowrap;}
+
+  footer{padding:2rem 6vw 3rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-soft);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem 1.4rem;}
+
+  @media (max-width:720px){
+    .deliv-cols{grid-template-columns:1fr;}
+    .barrow-main{grid-template-columns:1.6rem 1fr 4.6rem;}
+    .ta-bar-row{grid-template-columns:6.2rem 1fr 2.2rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .barrow-fill,.ta-fill,.exec-seg{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg style="display:none">
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="M3 10v4h3l6 4V6L6 10H3z"/><path d="M15 9a3 3 0 010 6"/><path d="M18 6a7 7 0 010 12"/></symbol>
+  <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 016.5 3H12v18H6.5A2.5 2.5 0 004 18.5z"/><path d="M20 5.5A2.5 2.5 0 0017.5 3H12v18h5.5a2.5 2.5 0 002.5-2.5z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 6.5l9 6.5 9-6.5"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0"/><path d="M12 18v4M9 22h6"/></symbol>
+  <symbol id="i-poster" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.2"/><circle cx="19" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M6.9 7.4L10.5 16M17.1 7.4L13.5 16M7.2 6h9.6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 3.5V11c0 5.5-3.4 9-8 11-4.6-2-8-5.5-8-11V5.5z"/><path d="M8.5 12l2.5 2.5L16 9"/></symbol>
+  <symbol id="i-dashboard" viewBox="0 0 24 24"><path d="M4 20a8 8 0 1116 0"/><path d="M12 20l4-7"/><circle cx="12" cy="20" r="1.2"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2.5 20c0-3.3 2.5-6 5.5-6s5.5 2.7 5.5 6"/><path d="M14.5 20c0-2.4 1.6-4.4 3.7-5.2"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+</svg>
+
+<div class="topnav">
+  <div class="brand"><span class="dot"></span>Sanchala — Metrics</div>
+  <nav id="navlinks">
+    <a href="#skills" class="active">Skills</a>
+    <a href="#ta">Therapeutic Areas</a>
+    <a href="#deliverables">Deliverables</a>
+    <a href="#journey">Journey</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <p class="hero-kicker">Interactive Metrics Dashboard · Vol. 2026</p>
+  <h1>Publication &amp; Medical <em>Communications</em></h1>
+  <p>An interactive read of the CV — skills sized by output, therapeutic areas by role, deliverables by kind, and career as a simple timeline.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="n">9</span><span class="l">Years Experience</span></div>
+    <div class="hstat"><span class="n">8</span><span class="l">Core Skill Domains</span></div>
+    <div class="hstat"><span class="n">7</span><span class="l">Therapeutic Areas</span></div>
+    <div class="hstat"><span class="n">300+</span><span class="l">Assets Reviewed / Delivered</span></div>
+  </div>
+</header>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-head"><span class="fig-tag">FIG. 1</span><h2 class="section-title">Skills, by Output</h2></div>
+  <p class="section-desc">Each skill domain sized by its headline metric. Click a row to see what's behind the number.</p>
+
+  <div class="filterbar" id="skillFilter">
+    <button class="filterbtn active" data-filter="all">All Skills</button>
+    <button class="filterbtn" data-filter="plan">Planning &amp; Delivery</button>
+    <button class="filterbtn" data-filter="craft">Quality, Collaboration &amp; Leadership</button>
+  </div>
+
+  <div class="barlist" id="barlist">
+
+    <div class="barrow" data-group="plan">
+      <div class="barrow-main">
+        <span class="barrow-idx">01</span>
+        <div class="barrow-info">
+          <p class="name">Strategic Publication Planning</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="18.3"></div></div>
+        </div>
+        <div class="barrow-num">5+<small>plans led</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>Endocrinology — 4 plans (2 products)</li>
+          <li>Neurology — 1 plan</li>
+          <li>Oncology — 1 plan</li>
+          <li>Cardiovascular — 1 plan</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="plan">
+      <div class="barrow-main">
+        <span class="barrow-idx">02</span>
+        <div class="barrow-info">
+          <p class="name">Publication Plan Tactical Execution</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="81.6"></div></div>
+        </div>
+        <div class="barrow-num">100+<small>assets delivered</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <div class="exec-bar" role="img" aria-label="Breakdown of assets by type">
+          <span class="exec-seg" style="--w:0%;--c:var(--seg1);" data-tip="Congress abstracts &amp; presentations — 40+ (39%)"></span>
+          <span class="exec-seg" style="--w:0%;--c:var(--seg2);" data-tip="Medical communication deliverables — 34 (33%)"></span>
+          <span class="exec-seg" style="--w:0%;--c:var(--seg3);" data-tip="Enhanced digital publications — 16 (16%)"></span>
+          <span class="exec-seg" style="--w:0%;--c:var(--seg4);" data-tip="Peer-reviewed publications — 12 (12%)"></span>
+        </div>
+        <ul class="exec-legend">
+          <li><span class="dot" style="background:var(--seg1);"></span>Congress abstracts &amp; presentations<b>40+</b></li>
+          <li><span class="dot" style="background:var(--seg2);"></span>Medical communication deliverables<b>34</b></li>
+          <li><span class="dot" style="background:var(--seg3);"></span>Enhanced digital publications<b>16</b></li>
+          <li><span class="dot" style="background:var(--seg4);"></span>Peer-reviewed publications<b>12</b></li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="plan">
+      <div class="barrow-main">
+        <span class="barrow-idx">03</span>
+        <div class="barrow-info">
+          <p class="name">Scientific Communication &amp; Engagements</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="57.7"></div></div>
+        </div>
+        <div class="barrow-num">50+<small>congresses covered</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>1st centralized congress library + metrics dashboard (Sanofi GenMed)</li>
+          <li>50+ pre-congress medical trainings led</li>
+          <li>1 omnichannel engagement CDP designed &amp; executed</li>
+          <li>Multi-country KOL &amp; advisory board coordination</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="plan">
+      <div class="barrow-main">
+        <span class="barrow-idx">04</span>
+        <div class="barrow-info">
+          <p class="name">Publication Compliance Review</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="68.3"></div></div>
+        </div>
+        <div class="barrow-num">70+<small>publication assets reviewed</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>Abstracts, presentations, and manuscripts — reviewed on iEnvision</li>
+          <li>Standards: ICMJE, GPP, GPCAP, EQUATOR</li>
+          <li>Signoff via iEnvision global review workflow</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="craft">
+      <div class="barrow-main">
+        <span class="barrow-idx">05</span>
+        <div class="barrow-info">
+          <p class="name">Scientific Writing &amp; Review</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="68.3"></div></div>
+        </div>
+        <div class="barrow-num">70+<small>assets written and reviewed</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>Immunology, Rare Disease, Oncology, R&amp;D coverage</li>
+          <li>1 scientific communication platform built</li>
+          <li>1 pipeline-molecule lexicon developed</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="craft">
+      <div class="barrow-main">
+        <span class="barrow-idx">06</span>
+        <div class="barrow-info">
+          <p class="name">Quality Control of Assets</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="100"></div></div>
+        </div>
+        <div class="barrow-num">150+<small>publications QC'd</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>15+ writers trained via QC framework</li>
+          <li>2 QC specialists mentored &amp; onboarded</li>
+          <li>Nominated — "Rising Star of the Year"</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="craft">
+      <div class="barrow-main">
+        <span class="barrow-idx">07</span>
+        <div class="barrow-info">
+          <p class="name">AI &amp; Automation Integration</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="14.1"></div></div>
+        </div>
+        <div class="barrow-num">3<small>AI tools tiered</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>AI-enabled translation process map (Sanofi Business Operations)</li>
+          <li>BioRender adoption pioneered for scientific graphics</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="barrow" data-group="craft">
+      <div class="barrow-main">
+        <span class="barrow-idx">08</span>
+        <div class="barrow-info">
+          <p class="name">Cross-functional Collaboration &amp; Leadership</p>
+          <div class="barrow-track"><div class="barrow-fill" data-target="31.6"></div></div>
+        </div>
+        <div class="barrow-num">15+<small>writers mentored</small></div>
+        <svg class="icon barrow-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="barrow-detail"><div class="barrow-detail-inner">
+        <ul class="detail-list">
+          <li>6 medical teams · 2 vendors · 3+ business ops teams aligned</li>
+          <li>4 therapeutic areas coordinated simultaneously</li>
+          <li>Registered ISMPP CMPP Mentor</li>
+          <li>ISMPP Academy Committee Member</li>
+        </ul>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- THERAPEUTIC AREAS -->
+<section id="ta">
+  <div class="section-head"><span class="fig-tag">FIG. 2</span><h2 class="section-title">Therapeutic Area Coverage</h2></div>
+  <p class="section-desc">Grouped by the capacity each area was worked in.</p>
+
+  <div class="ta-groups">
+    <div class="ta-group">
+      <h3>Publication Planning &amp; Tactics</h3>
+      <div class="ta-card-grid">
+        <div class="ta-card plan" title="4 publication plans (2 products)">
+          <p class="ta-card-name">Endocrinology</p>
+          <span class="ta-card-badge plan">Led</span>
+        </div>
+        <div class="ta-card plan" title="1 publication plan">
+          <p class="ta-card-name">Neurology</p>
+          <span class="ta-card-badge plan">Led</span>
+        </div>
+        <div class="ta-card plan" title="1 publication plan">
+          <p class="ta-card-name">Oncology</p>
+          <span class="ta-card-badge plan">Led</span>
+        </div>
+        <div class="ta-card plan" title="1 publication plan">
+          <p class="ta-card-name">Cardiovascular</p>
+          <span class="ta-card-badge plan">Led</span>
+        </div>
+      </div>
+      <p class="ta-note">Publication plans led — coordinated simultaneously as Global Scientific Content Lead.</p>
+    </div>
+    <div class="ta-group">
+      <h3>Scientific Writing &amp; Authorship</h3>
+      <div class="ta-card-grid">
+        <div class="ta-card write" title="Authored during Senior Writer phase">
+          <p class="ta-card-name">Immunology</p>
+          <span class="ta-card-badge">Writer</span>
+        </div>
+        <div class="ta-card write" title="Authored during Senior Writer phase">
+          <p class="ta-card-name">Rare Disease</p>
+          <span class="ta-card-badge">Writer</span>
+        </div>
+        <div class="ta-card write" title="Authored during Senior Writer phase">
+          <p class="ta-card-name">Oncology</p>
+          <span class="ta-card-badge">Authored</span>
+        </div>
+        <div class="ta-card write" title="Authored during Senior Writer phase">
+          <p class="ta-card-name">R&amp;D</p>
+          <span class="ta-card-badge">Writer</span>
+        </div>
+      </div>
+      <p class="ta-note">Authored, not counted by volume — shown as coverage rather than plan count.</p>
+    </div>
+  </div>
+  <p class="ta-note" style="margin-top:1.2rem;">Note: ISMPP affiliations also list ATTD and EASD as attended congresses, suggesting diabetes-adjacent exposure not otherwise labeled as a therapeutic area in the source text.</p>
+</section>
+
+<!-- DELIVERABLES -->
+<section id="deliverables">
+  <div class="section-head"><span class="fig-tag">FIG. 3</span><h2 class="section-title">Deliverable Index</h2></div>
+  <p class="section-desc">What was written directly, versus what was led or delivered at a program level — by kind, not by count.</p>
+
+  <div class="filterbar" id="delivFilter">
+    <button class="filterbtn active" data-filter="all">All</button>
+    <button class="filterbtn" data-filter="writer">Writer Only</button>
+    <button class="filterbtn" data-filter="lead">Lead Only</button>
+  </div>
+
+  <div class="deliv-cols">
+    <div class="deliv-col" id="col-writer">
+      <div class="deliv-head writer">
+        <span class="swatch"><svg class="icon" viewBox="0 0 24 24" style="stroke:#fff"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/></svg></span>
+        <div><h3>As Scientific Writer</h3><span>Scientific Writing &amp; Review</span></div>
+      </div>
+      <div class="chip-cloud">
+        <span class="chip writer"><svg class="icon"><use href="#i-doc"/></svg>Abstracts</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-mega"/></svg>Congress presentations</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-mic"/></svg>Congress coverage content</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-screen"/></svg>Enhanced digital content</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-grid"/></svg>Scientific communication platform</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-book"/></svg>Lexicon</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-poster"/></svg>Scientific brochures</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-mail"/></svg>Newsletters</span>
+        <span class="chip writer"><svg class="icon"><use href="#i-dashboard"/></svg>Scientific slide decks</span>
+      </div>
+    </div>
+
+    <div class="deliv-col" id="col-lead">
+      <div class="deliv-head lead">
+        <span class="swatch"><svg class="icon" viewBox="0 0 24 24" style="stroke:#fff"><path d="M4 21V4l14 2.5-6 3.5 6 3.5L4 16"/></svg></span>
+        <div><h3>As Global Scientific Content Lead</h3><span>Planning · Execution · Engagements · Compliance</span></div>
+      </div>
+      <div class="chip-cloud">
+        <span class="chip lead"><svg class="icon"><use href="#i-mega"/></svg>Congress abstracts &amp; presentations</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-book"/></svg>Peer-reviewed publications</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-screen"/></svg>Enhanced digital publications</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-network"/></svg>Medical communication deliverables</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-doc"/></svg>Primary &amp; secondary manuscripts</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-doc"/></svg>Review articles</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-people"/></svg>Delphi consensus publications</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-dashboard"/></svg>Manuscript slide decks</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-cap"/></svg>Pre-congress training materials</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-mail"/></svg>Post-congress reports &amp; newsletters</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-network"/></svg>Omnichannel HCP engagement materials</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-mic"/></svg>Infographics, podcasts &amp; Yammer posts</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-poster"/></svg>Posters</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-dashboard"/></svg>Congress library plan + metrics dashboard</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-grid"/></svg>Omnichannel engagement CDP</span>
+        <span class="chip lead"><svg class="icon"><use href="#i-shield"/></svg>Publications reviewed for compliance</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="section-head"><span class="fig-tag">FIG. 4</span><h2 class="section-title">Professional Journey</h2></div>
+  <p class="section-desc">Company and role, in order.</p>
+
+  <div class="timeline">
+    <div class="tl-item current">
+      <span class="tl-dot"></span>
+      <div class="tl-card">
+        <h3 class="tl-role">Global Scientific Content Lead <span class="tl-org">· Sanofi</span></h3>
+        <span class="tl-dates">06/2023 – Present</span>
+      </div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-dot"></span>
+      <div class="tl-card">
+        <h3 class="tl-role">Senior Writer <span class="tl-org">· Sanofi</span></h3>
+        <span class="tl-dates">07/2022 – 05/2023</span>
+      </div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-dot"></span>
+      <div class="tl-card">
+        <h3 class="tl-role">Writer <span class="tl-org">· Sanofi</span></h3>
+        <span class="tl-dates">01/2021 – 06/2022</span>
+      </div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-dot"></span>
+      <div class="tl-card">
+        <h3 class="tl-role">Quality Control Specialist — Medical Publication <span class="tl-org">· Cactus Life Sciences</span></h3>
+        <span class="tl-dates">08/2017 – 01/2021</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Source: 2026_06_30.docx</span>
+  <span>Metrics extracted directly from stated achievements — not independently verified</span>
+</footer>
+
+<script>
+(function(){
+  // scroll-spy nav
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
+  var sections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  if('IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id = '#' + entry.target.id;
+          navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === id); });
+        }
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){ if(s) spy.observe(s); });
+  }
+
+  // animate bars on scroll into view
+  function animateFill(el){
+    var t = el.getAttribute('data-target');
+    if(t !== null){ el.style.width = t + '%'; }
+  }
+  var fillObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ animateFill(entry.target); fillObserver.unobserve(entry.target); }
+    });
+  }, {threshold:.4}) : null;
+
+  document.querySelectorAll('.barrow-fill, .ta-fill').forEach(function(el){
+    if(fillObserver) fillObserver.observe(el); else animateFill(el);
+  });
+
+  // execution mini-bar fills the first time its row opens
+  var execWidths = ['39%','33%','16%','12%'];
+  var execFilled = false;
+  function fillExec(){
+    if(execFilled) return;
+    document.querySelectorAll('.exec-seg').forEach(function(seg,i){ seg.style.setProperty('--w', execWidths[i]); });
+    execFilled = true;
+  }
+
+  // skill row accordion
+  document.querySelectorAll('.barrow-main').forEach(function(main){
+    main.addEventListener('click', function(){
+      var row = main.closest('.barrow');
+      var wasOpen = row.classList.contains('open');
+      document.querySelectorAll('.barrow.open').forEach(function(r){ r.classList.remove('open'); });
+      if(!wasOpen){ row.classList.add('open'); fillExec(); }
+    });
+  });
+
+  // skills filter
+  document.querySelectorAll('#skillFilter .filterbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#skillFilter .filterbtn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.getAttribute('data-filter');
+      document.querySelectorAll('.barrow').forEach(function(row){
+        row.classList.toggle('hide', f !== 'all' && row.getAttribute('data-group') !== f);
+      });
+    });
+  });
+
+  // deliverables filter
+  document.querySelectorAll('#delivFilter .filterbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#delivFilter .filterbtn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.getAttribute('data-filter');
+      var writerCol = document.getElementById('col-writer');
+      var leadCol = document.getElementById('col-lead');
+      writerCol.classList.toggle('fade', f === 'lead');
+      leadCol.classList.toggle('fade', f === 'writer');
+    });
+  });
+})();
+</script>
+</body>
+</html>
